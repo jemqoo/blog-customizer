@@ -19,16 +19,24 @@ import { RadioGroup } from '../radio-group';
 import { Text } from 'components/text';
 import { Separator } from '../separator/Separator';
 
-export const ArticleParamsForm = () => {
+interface IArticleParamsFormProps {
+	articleState: typeof defaultArticleState;
+	setArticleState: (newState: typeof defaultArticleState) => void;
+	onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+	onReset: (e: React.FormEvent<HTMLFormElement>) => void;
+}
+
+export const ArticleParamsForm = ({
+	articleState,
+	setArticleState,
+	onSubmit,
+	onReset,
+}: IArticleParamsFormProps) => {
 	const [isOpenSidebar, setIsOpenSidebar] = useState(false);
 
 	const onToggle = () => {
 		setIsOpenSidebar((isOpenSidebar) => !isOpenSidebar);
 	};
-
-	const [articleState, setArticleState] = useState({
-		...defaultArticleState,
-	});
 
 	const handleFontFamilyChange = (selectedValue: OptionType) => {
 		setArticleState({
@@ -70,7 +78,7 @@ export const ArticleParamsForm = () => {
 			<ArrowButton onClick={onToggle} isOpen={isOpenSidebar} />
 			<aside
 				className={isOpenSidebar ? styles.container_open : styles.container}>
-				<form className={styles.form}>
+				<form className={styles.form} onSubmit={onSubmit} onReset={onReset}>
 					<Text weight={800} size={31} uppercase>
 						Задайте параметры
 					</Text>
