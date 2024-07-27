@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { Select } from '../select';
 
 import {
+	OptionType,
 	backgroundColors,
 	contentWidthArr,
 	defaultArticleState,
@@ -25,6 +26,45 @@ export const ArticleParamsForm = () => {
 		setIsOpenSidebar((isOpenSidebar) => !isOpenSidebar);
 	};
 
+	const [articleState, setArticleState] = useState({
+		...defaultArticleState,
+	});
+
+	const handleFontFamilyChange = (selectedValue: OptionType) => {
+		setArticleState({
+			...articleState,
+			fontFamilyOption: selectedValue,
+		});
+	};
+
+	const handleFontSizeChange = (selectedValue: OptionType) => {
+		setArticleState({
+			...articleState,
+			fontSizeOption: selectedValue,
+		});
+	};
+
+	const handleFontColorChange = (selectedValue: OptionType) => {
+		setArticleState({
+			...articleState,
+			fontColor: selectedValue,
+		});
+	};
+
+	const handleBackgroundColorChange = (selectedValue: OptionType) => {
+		setArticleState({
+			...articleState,
+			backgroundColor: selectedValue,
+		});
+	};
+
+	const handleContentWidthChange = (selectedValue: OptionType) => {
+		setArticleState({
+			...articleState,
+			contentWidth: selectedValue,
+		});
+	};
+
 	return (
 		<>
 			<ArrowButton onClick={onToggle} isOpen={isOpenSidebar} />
@@ -35,39 +75,35 @@ export const ArticleParamsForm = () => {
 						Задайте параметры
 					</Text>
 					<Select
-						selected={defaultArticleState.fontFamilyOption}
+						selected={articleState.fontFamilyOption}
 						options={fontFamilyOptions}
-						// // onChange={}
-						// // onClose={}
+						onChange={handleFontFamilyChange}
 						title='Шрифт'
 					/>
 					<RadioGroup
 						name='Размер шрифта'
 						options={fontSizeOptions}
-						selected={defaultArticleState.fontSizeOption}
-						// onChange={}
+						selected={articleState.fontSizeOption}
+						onChange={handleFontSizeChange}
 						title='Размер шрифта'
 					/>
 					<Select
-						selected={defaultArticleState.fontColor}
+						selected={articleState.fontColor}
 						options={fontColors}
-						// // onChange={}
-						// // onClose={}
+						onChange={handleFontColorChange}
 						title='Цвет шрифта'
 					/>
 					<Separator />
 					<Select
-						selected={defaultArticleState.backgroundColor}
+						selected={articleState.backgroundColor}
 						options={backgroundColors}
-						// // onChange={}
-						// // onClose={}
+						onChange={handleBackgroundColorChange}
 						title='Цвет фона'
 					/>
 					<Select
-						selected={defaultArticleState.contentWidth}
+						selected={articleState.contentWidth}
 						options={contentWidthArr}
-						// // onChange={}
-						// // onClose={}
+						onChange={handleContentWidthChange}
 						title='Ширина контента'
 					/>
 
