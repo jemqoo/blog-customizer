@@ -2,7 +2,7 @@ import { ArrowButton } from 'components/arrow-button';
 import { Button } from 'components/button';
 
 import styles from './ArticleParamsForm.module.scss';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Select } from '../select';
 
 import {
@@ -34,9 +34,31 @@ export const ArticleParamsForm = ({
 }: IArticleParamsFormProps) => {
 	const [isOpenSidebar, setIsOpenSidebar] = useState(false);
 
+	const sidebarRef = useRef<HTMLDivElement | null>(null); // Создаём реф для сайдбара
+
 	const onToggle = () => {
 		setIsOpenSidebar((isOpenSidebar) => !isOpenSidebar);
 	};
+
+	const handleClickOutside = (event: MouseEvent) => {
+		// Проверяем, был ли клик вне нашего сайдбара
+		if (
+			sidebarRef.current &&
+			!sidebarRef.current.contains(event.target as Node)
+		) {
+			setIsOpenSidebar(false);
+		}
+	};
+
+	useEffect(() => {
+		// Добавляем обработчик события для кликов по документу
+		document.addEventListener('mousedown', handleClickOutside);
+
+		// Удаляем обработчик события при размонтировании компонента
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
+	}, []);
 
 	const handleFontFamilyChange = (selectedValue: OptionType) => {
 		setArticleState({
@@ -77,6 +99,7 @@ export const ArticleParamsForm = ({
 		<>
 			<ArrowButton onClick={onToggle} isOpen={isOpenSidebar} />
 			<aside
+				ref={sidebarRef}
 				className={isOpenSidebar ? styles.container_open : styles.container}>
 				<form className={styles.form} onSubmit={onSubmit} onReset={onReset}>
 					<Text weight={800} size={31} uppercase>
