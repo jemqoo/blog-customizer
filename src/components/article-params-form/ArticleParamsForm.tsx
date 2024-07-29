@@ -2,7 +2,7 @@ import { ArrowButton } from 'components/arrow-button';
 import { Button } from 'components/button';
 
 import styles from './ArticleParamsForm.module.scss';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Select } from '../select';
 
 import {
@@ -18,6 +18,7 @@ import {
 import { RadioGroup } from '../radio-group';
 import { Text } from 'components/text';
 import { Separator } from '../separator/Separator';
+import { useClose } from 'src/hooks/useClose';
 
 interface IArticleParamsFormProps {
 	articleState: typeof defaultArticleState;
@@ -34,31 +35,17 @@ export const ArticleParamsForm = ({
 }: IArticleParamsFormProps) => {
 	const [isOpenSidebar, setIsOpenSidebar] = useState(false);
 
-	const sidebarRef = useRef<HTMLDivElement | null>(null); // Создаём реф для сайдбара
+	const sidebarRef = useRef<HTMLElement>(null);
+
+	useClose({
+		isOpen: isOpenSidebar,
+		onClose: () => setIsOpenSidebar(false),
+		rootRef: sidebarRef,
+	});
 
 	const onToggle = () => {
 		setIsOpenSidebar((isOpenSidebar) => !isOpenSidebar);
 	};
-
-	const handleClickOutside = (event: MouseEvent) => {
-		// Проверяем, был ли клик вне нашего сайдбара
-		if (
-			sidebarRef.current &&
-			!sidebarRef.current.contains(event.target as Node)
-		) {
-			setIsOpenSidebar(false);
-		}
-	};
-
-	useEffect(() => {
-		// Добавляем обработчик события для кликов по документу
-		document.addEventListener('mousedown', handleClickOutside);
-
-		// Удаляем обработчик события при размонтировании компонента
-		return () => {
-			document.removeEventListener('mousedown', handleClickOutside);
-		};
-	}, []);
 
 	const handleFontFamilyChange = (selectedValue: OptionType) => {
 		setArticleState({
